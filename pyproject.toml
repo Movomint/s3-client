@@ -4,9 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "s3_client"
-version = "0.1.1"
+version = "0.1.2"
 requires-python = ">=3.9"
 dependencies = ["boto3"]
+description = "Tiny S3 helper with unique-key uploads."
+license = {text = "MIT"}
 
-[tool.setuptools]
-py-modules = ["s3_client"]
+[tool.setuptools.packages.find]
+include = ["s3_client"]
