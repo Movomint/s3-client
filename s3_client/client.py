@@ -29,7 +29,7 @@ class S3Client:
         root, ext = os.path.splitext(name)
         unique = f"{root}-{uuid.uuid4().hex[:8]}{ext}"
 
-        parts = [self.env.strip("/"), category.strip("/")]
+        parts = [category.strip("/")]
         if subpath:
             parts.append(subpath.strip("/"))
         parts.append(unique)
