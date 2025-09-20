@@ -48,5 +48,6 @@ class S3Client:
             Key=key,
             Body=data,
             ContentType=content_type,
+            ContentDisposition="inline"
         )
         return f"https://{self.bucket}.s3.{self.region}.amazonaws.com/{key}"
