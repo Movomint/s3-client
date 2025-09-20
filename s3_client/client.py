@@ -8,10 +8,10 @@ AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 
 
 class S3Client:
-    def __init__(self, env: str, bucket: str, region: str):
+    def __init__(self, env: str):
         self.env = env  # expected: "dev" | "stage" | "prod" (or "local" to skip)
-        self.bucket = bucket
-        self.region = region
+        self.bucket = f'movomint-{env}'
+        self.region = "us-east-1"
 
         self.client = None if self.env == "local" else boto3.client(
             "s3",
@@ -23,8 +23,8 @@ class S3Client:
     def _key(self, name: str, category: str, subpath: str = "") -> str:
         """
         Key format: <env>/<category>/[subpath/]<filename-uuid>.<ext>
-        Example:    stage/ingested/test-a1b2c3d4.pdf
-                    prod/generated/pick-tickets/pt-0001-9f8e7d6c.pdf
+        Example:    movomint-stage/ingested/test-a1b2c3d4.pdf
+                    movomint-prod/generated/pick-tickets/pt-0001-9f8e7d6c.pdf
         """
         root, ext = os.path.splitext(name)
         unique = f"{root}-{uuid.uuid4().hex[:8]}{ext}"
