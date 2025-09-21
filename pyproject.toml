@@ -1,5 +1,6 @@
 [project]
 name = "s3_client"
+version = "0.1.0"
 requires-python = ">=3.9"
 dependencies = ["boto3"]
 description = "Tiny S3 helper with unique-key uploads."
