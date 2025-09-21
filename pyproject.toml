@@ -10,5 +10,5 @@ dependencies = ["boto3"]
 description = "Tiny S3 helper with unique-key uploads."
 license = {text = "MIT"}
 
-[tool.setuptools.packages.find]
-include = ["s3_client"]
+[tool.setuptools]
+packages = ["s3_client"]
