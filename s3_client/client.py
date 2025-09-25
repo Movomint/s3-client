@@ -38,13 +38,13 @@ class S3Client:
     def _key(self, name: str, category: str, subpath: str = "") -> str:
         """
         Key format: <env>/<category>/[subpath/]<filename-uuid>.<ext>
-        Example:    dev/ingested/test-a1b2c3d4.pdf
-                    prod/generated/pick-tickets/pt-0001-9f8e7d6c.pdf
+        Example:    movomint-stage/ingested/test-a1b2c3d4.pdf
+                    movomint-prod/generated/pick-tickets/pt-0001-9f8e7d6c.pdf
         """
         root, ext = os.path.splitext(name)
         unique = f"{root}-{uuid.uuid4().hex[:8]}{ext}"
 
-        parts = [self.env, category.strip("/")]
+        parts = [category.strip("/")]
         if subpath:
             parts.append(subpath.strip("/"))
         parts.append(unique)
