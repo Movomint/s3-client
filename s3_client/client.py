@@ -1,7 +1,10 @@
 # s3_client.py
+import base64
 import os
+import re
 import uuid
 import mimetypes
+import urllib.parse
 import boto3
 from typing import Literal, Optional
 
@@ -65,3 +68,26 @@ class S3Client:
             ContentType=content_type,
         )
         return f"https://{self.bucket}.s3.{self.region}.amazonaws.com/{key}"
+
+    def download(self, s3_url: str) -> tuple[str, str]:
+        if self.client is None or self.bucket is None:
+            raise ValueError("Cannot download from S3 in local environment")
+        
+        parsed = urllib.parse.urlparse(s3_url)
+        bucket = parsed.hostname.split('.')[0]
+        key = parsed.path.lstrip('/')
+        
+        # Download the object
+        response = self.client.get_object(Bucket=bucket, Key=key)
+        data = response['Body'].read()
+        filename_with_uuid = key.split('/')[-1] # Get filename from key
+        
+        # Remove UUID from filename to get original name
+        match = re.match(r'^(.+)-[0-9a-f]{8}(\.\w+)?$', filename_with_uuid)
+        if match:
+            name = match.group(1) + (match.group(2) or '')
+        else:
+            name = filename_with_uuid
+
+        base64_data = base64.b64encode(data).decode('utf-8')        
+        return (name, base64_data)
