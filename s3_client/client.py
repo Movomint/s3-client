@@ -67,7 +67,9 @@ class S3Client:
             Body=data,
             ContentType=content_type,
         )
-        return f"https://{self.bucket}.s3.{self.region}.amazonaws.com/{key}"
+        # URL-encode the key to handle special characters like spaces, #, etc.
+        encoded_key = urllib.parse.quote(key, safe='/')
+        return f"https://{self.bucket}.s3.{self.region}.amazonaws.com/{encoded_key}"
 
     def download(self, s3_url: str) -> tuple[str, str]:
         if self.client is None or self.bucket is None:
@@ -75,7 +77,7 @@ class S3Client:
         
         parsed = urllib.parse.urlparse(s3_url)
         bucket = parsed.hostname.split('.')[0]
-        key = parsed.path.lstrip('/')
+        key = urllib.parse.unquote(parsed.path.lstrip('/'))
         
         # Download the object
         response = self.client.get_object(Bucket=bucket, Key=key)
